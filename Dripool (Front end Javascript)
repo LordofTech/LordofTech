@@ -1,0 +1,68 @@
+// script.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Sample data for products
+    const products = [
+        { id: 1, name: 'Blue Shoes', price: 50 },
+        { id: 2, name: 'Red Shirt', price: 20 },
+        // Add more products as needed
+    ];
+
+    const productsList = document.getElementById('products-list');
+    const cartItems = document.getElementById('cart-items');
+    const searchInput = document.getElementById('search-input');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    let cart = [];
+
+    // Render products
+    function renderProducts() {
+        productsList.innerHTML = '';
+        products.forEach(product => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <strong>${product.name}</strong> - $${product.price}
+                <button onclick="addToCart(${product.id})">Add to Cart</button>
+            `;
+            productsList.appendChild(li);
+        });
+    }
+
+    // Add product to cart
+    window.addToCart = function(productId) {
+        const product = products.find(p => p.id === productId);
+        if (product) {
+            cart.push(product);
+            renderCart();
+        }
+    };
+
+    // Render cart items
+    function renderCart() {
+        cartItems.innerHTML = '';
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.innerText = `${item.name} - $${item.price}`;
+            cartItems.appendChild(li);
+        });
+    }
+
+    // Checkout
+    checkoutBtn.addEventListener('click', function() {
+        if (cart.length > 0) {
+            const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+            alert(`Total Price: $${totalPrice}`);
+            // Additional checkout logic (e.g., integration with payment gateway)
+        } else {
+            alert('Your cart is empty.');
+        }
+    });
+
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchTerm));
+        renderProducts(filteredProducts);
+    });
+
+    // Initial render
+    renderProducts();
+});
